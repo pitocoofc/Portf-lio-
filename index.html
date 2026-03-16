@@ -6,6 +6,7 @@
 <title>Perfil | NDJ-Lib</title>
 
 <style>
+
 :root{
 --bg:#0a0a0c;
 --card:#161b22;
@@ -17,7 +18,7 @@
 body{
 background:var(--bg);
 color:var(--text);
-font-family:'Inter',sans-serif;
+font-family:Inter,sans-serif;
 margin:0;
 padding:20px;
 }
@@ -31,20 +32,44 @@ border-radius:20px;
 border:1px solid #30363d;
 }
 
+h1{
+text-align:center;
+margin-bottom:40px;
+}
+
 .profile{
 display:flex;
-align-items:center;
 gap:25px;
-margin-top:30px;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.avatar-wrapper{
+position:relative;
 }
 
 .avatar{
-width:120px;
-height:120px;
+width:130px;
+height:130px;
 border-radius:50%;
 border:3px solid var(--purple);
-box-shadow:0 0 20px rgba(111,45,168,0.5);
+box-shadow:0 0 20px rgba(111,45,168,0.6);
 }
+
+.status-dot{
+position:absolute;
+bottom:5px;
+right:5px;
+width:22px;
+height:22px;
+border-radius:50%;
+border:3px solid var(--card);
+}
+
+.online{background:#3ba55d;}
+.idle{background:#faa61a;}
+.dnd{background:#ed4245;}
+.offline{background:#747f8d;}
 
 .info{
 flex:1;
@@ -53,31 +78,64 @@ flex:1;
 .name{
 font-size:1.6rem;
 font-weight:900;
-margin-bottom:10px;
-}
-
-.spotify{
-color:var(--blue);
-font-weight:bold;
+margin-top:10px;
 }
 
 .bubble{
-position:relative;
 background:#0d1117;
-padding:20px;
+padding:18px;
 border-radius:15px;
 border-left:4px solid var(--purple);
-margin-bottom:20px;
+margin-bottom:15px;
+position:relative;
 }
 
 .bubble::after{
 content:"";
 position:absolute;
 left:-12px;
-top:25px;
+top:20px;
 border-width:10px;
 border-style:solid;
 border-color:transparent #0d1117 transparent transparent;
+}
+
+.spotify-card{
+margin-top:20px;
+background:#0d1117;
+border-radius:15px;
+padding:15px;
+border:1px solid #30363d;
+max-width:300px;
+}
+
+.spotify-card img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.song{
+font-weight:bold;
+}
+
+.artist{
+font-size:0.9rem;
+opacity:0.8;
+margin-bottom:8px;
+}
+
+.progress{
+height:6px;
+background:#222;
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+background:var(--purple);
+width:0%;
 }
 
 .btn-back{
@@ -87,6 +145,7 @@ color:var(--blue);
 text-decoration:none;
 font-weight:bold;
 }
+
 </style>
 </head>
 
@@ -94,25 +153,41 @@ font-weight:bold;
 
 <div class="container">
 
-<h1 style="text-align:center;">NDJ-Lib Developer</h1>
+<h1>NDJ-Lib Developer</h1>
 
 <div class="profile">
 
+<div class="avatar-wrapper">
+
 <img id="avatar" class="avatar">
+
+<div id="status" class="status-dot"></div>
+
+</div>
 
 <div class="info">
 
 <div id="bio" class="bubble">
-Carregando descrição...
+Carregando status...
 </div>
 
-<div id="name" class="name">
-Carregando...
-</div>
-
-<div id="spotify" class="spotify"></div>
+<div id="name" class="name"></div>
 
 </div>
+
+</div>
+
+<div id="spotifyCard" class="spotify-card" style="display:none;">
+
+<img id="album">
+
+<div class="song" id="song"></div>
+<div class="artist" id="artist"></div>
+
+<div class="progress">
+<div id="progressBar" class="progress-bar"></div>
+</div>
+
 </div>
 
 <div style="text-align:center;">
@@ -125,59 +200,111 @@ Carregando...
 
 const USER_ID="1448096319372656703";
 
-async function carregar(){
+let start=0;
+let end=0;
 
-const r = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-const j = await r.json();
-const d = j.data;
+async function atualizar(){
 
-const user = d.discord_user;
+try{
+
+const r=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+const j=await r.json();
+
+if(!j.success)return;
+
+const d=j.data;
+const user=d.discord_user;
 
 /* avatar */
 
-document.getElementById("avatar").src =
-`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+document.getElementById("avatar").src=
+`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`;
 
 /* nome */
 
-document.getElementById("name").innerText =
-user.display_name || user.username;
+document.getElementById("name").innerText=
+user.display_name||user.username;
 
-/* bio */
+/* status dot */
 
-let bio = "Sem status";
+const dot=document.getElementById("status");
 
-if(d.activities && d.activities.length){
+dot.className="status-dot "+d.discord_status;
 
-const custom = d.activities.find(a => a.name === "Custom Status");
+/* custom status */
 
-if(custom && custom.state){
-bio = custom.state;
+let bio="Sem status";
+
+if(d.activities){
+
+for(const act of d.activities){
+
+if(act.type===4 && act.state){
+
+bio=act.state;
+
 }
 
 }
 
-document.getElementById("bio").innerText = bio;
+}
+
+document.getElementById("bio").innerText=bio;
 
 /* spotify */
 
 if(d.listening_to_spotify){
 
-const s = d.spotify;
+const s=d.spotify;
 
-document.getElementById("spotify").innerText =
-`🎵 ${s.song} — ${s.artist}`;
+document.getElementById("spotifyCard").style.display="block";
+
+document.getElementById("album").src=s.album_art_url;
+document.getElementById("song").innerText=s.song;
+document.getElementById("artist").innerText=s.artist;
+
+start=s.timestamps.start;
+end=s.timestamps.end;
 
 }else{
 
-document.getElementById("spotify").innerText = "";
+document.getElementById("spotifyCard").style.display="none";
+
+}
+
+}catch(e){
+
+console.log("Erro API",e);
 
 }
 
 }
 
-carregar();
+/* barra de progresso */
+
+function atualizarBarra(){
+
+if(start && end){
+
+const now=Date.now();
+
+const total=end-start;
+const atual=now-start;
+
+const pct=(atual/total)*100;
+
+document.getElementById("progressBar").style.width=pct+"%";
+
+}
+
+}
+
+atualizar();
+
+setInterval(atualizar,5000);
+setInterval(atualizarBarra,1000);
 
 </script>
+
 </body>
-  </html>
+</html>
