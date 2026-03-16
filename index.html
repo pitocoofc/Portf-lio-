@@ -127,44 +127,50 @@ const USER_ID="1448096319372656703";
 
 async function carregar(){
 
-const r=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-const j=await r.json();
-const d=j.data;
+const r = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+const j = await r.json();
+const d = j.data;
 
-const user=d.discord_user;
+const user = d.discord_user;
 
-document.getElementById("avatar").src=
+/* avatar */
+
+document.getElementById("avatar").src =
 `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
 
-document.getElementById("name").innerText=
+/* nome */
+
+document.getElementById("name").innerText =
 user.display_name || user.username;
 
-/* bio (custom status) */
+/* bio */
 
-let bio="Sem status";
+let bio = "Sem status";
 
-for(const act of d.activities){
+if(d.activities && d.activities.length){
 
-if(act.type===4){
-bio=act.state;
+const custom = d.activities.find(a => a.name === "Custom Status");
+
+if(custom && custom.state){
+bio = custom.state;
 }
 
 }
 
-document.getElementById("bio").innerText=bio;
+document.getElementById("bio").innerText = bio;
 
 /* spotify */
 
 if(d.listening_to_spotify){
 
-const s=d.spotify;
+const s = d.spotify;
 
-document.getElementById("spotify").innerText=
+document.getElementById("spotify").innerText =
 `🎵 ${s.song} — ${s.artist}`;
 
 }else{
 
-document.getElementById("spotify").innerText="";
+document.getElementById("spotify").innerText = "";
 
 }
 
@@ -173,6 +179,5 @@ document.getElementById("spotify").innerText="";
 carregar();
 
 </script>
-
 </body>
   </html>
