@@ -205,12 +205,10 @@ let end=0;
 
 async function atualizar(){
 
-try{
-
 const r=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
 const j=await r.json();
 
-if(!j.success)return;
+if(!j.success) return;
 
 const d=j.data;
 const user=d.discord_user;
@@ -223,13 +221,17 @@ document.getElementById("avatar").src=
 /* nome */
 
 document.getElementById("name").innerText=
-user.display_name||user.username;
+user.display_name || user.username;
 
-/* status dot */
+/* status */
 
 const dot=document.getElementById("status");
 
-dot.className="status-dot "+d.discord_status;
+dot.classList.remove("online","idle","dnd","offline");
+
+if(d.discord_status){
+dot.classList.add(d.discord_status);
+}
 
 /* custom status */
 
@@ -239,7 +241,7 @@ if(d.activities){
 
 for(const act of d.activities){
 
-if(act.type===4 && act.state){
+if(act.name==="Custom Status" && act.state){
 
 bio=act.state;
 
@@ -253,7 +255,7 @@ document.getElementById("bio").innerText=bio;
 
 /* spotify */
 
-if(d.listening_to_spotify){
+if(d.spotify){
 
 const s=d.spotify;
 
@@ -272,15 +274,9 @@ document.getElementById("spotifyCard").style.display="none";
 
 }
 
-}catch(e){
-
-console.log("Erro API",e);
-
 }
 
-}
-
-/* barra de progresso */
+/* barra da música */
 
 function atualizarBarra(){
 
@@ -291,7 +287,9 @@ const now=Date.now();
 const total=end-start;
 const atual=now-start;
 
-const pct=(atual/total)*100;
+let pct=(atual/total)*100;
+
+if(pct>100) pct=100;
 
 document.getElementById("progressBar").style.width=pct+"%";
 
