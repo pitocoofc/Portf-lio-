@@ -1,307 +1,273 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Perfil | NDJ-Lib</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | NDJ-Lib</title>
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --card: #161b22;
+            --text: #e6edf3;
+            --purple: #6f2da8;
+            --blue: #005a82;
+        }
 
-<style>
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-:root{
---bg:#0a0a0c;
---card:#161b22;
---text:#e6edf3;
---purple:#6f2da8;
---blue:#005a82;
-}
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid #30363d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-body{
-background:var(--bg);
-color:var(--text);
-font-family:Inter,sans-serif;
-margin:0;
-padding:20px;
-}
+        h1 {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #8b949e;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-.container{
-max-width:900px;
-margin:40px auto;
-background:var(--card);
-padding:40px;
-border-radius:20px;
-border:1px solid #30363d;
-}
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
 
-h1{
-text-align:center;
-margin-bottom:40px;
-}
+        .avatar-wrapper {
+            position: relative;
+        }
 
-.profile{
-display:flex;
-gap:25px;
-align-items:center;
-flex-wrap:wrap;
-}
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--purple);
+            box-shadow: 0 0 20px rgba(111,45,168,0.4);
+            object-fit: cover;
+        }
 
-.avatar-wrapper{
-position:relative;
-}
+        .status-dot {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 4px solid var(--card);
+        }
 
-.avatar{
-width:130px;
-height:130px;
-border-radius:50%;
-border:3px solid var(--purple);
-box-shadow:0 0 20px rgba(111,45,168,0.6);
-}
+        .online { background: #3ba55d; }
+        .idle { background: #faa61a; }
+        .dnd { background: #ed4245; }
+        .offline { background: #747f8d; }
 
-.status-dot{
-position:absolute;
-bottom:5px;
-right:5px;
-width:22px;
-height:22px;
-border-radius:50%;
-border:3px solid var(--card);
-}
+        .name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 10px 0;
+        }
 
-.online{background:#3ba55d;}
-.idle{background:#faa61a;}
-.dnd{background:#ed4245;}
-.offline{background:#747f8d;}
+        .bubble {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--purple);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-.info{
-flex:1;
-}
+        /* Spotify Card Estilizado */
+        .spotify-card {
+            margin-top: 25px;
+            background: #0d1117;
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid #1db95433;
+            display: none;
+        }
 
-.name{
-font-size:1.6rem;
-font-weight:900;
-margin-top:10px;
-}
+        .spotify-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
 
-.bubble{
-background:#0d1117;
-padding:18px;
-border-radius:15px;
-border-left:4px solid var(--purple);
-margin-bottom:15px;
-position:relative;
-}
+        .spotify-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+        }
 
-.bubble::after{
-content:"";
-position:absolute;
-left:-12px;
-top:20px;
-border-width:10px;
-border-style:solid;
-border-color:transparent #0d1117 transparent transparent;
-}
+        .song-details {
+            flex: 1;
+            overflow: hidden;
+        }
 
-.spotify-card{
-margin-top:20px;
-background:#0d1117;
-border-radius:15px;
-padding:15px;
-border:1px solid #30363d;
-max-width:300px;
-}
+        .song {
+            font-weight: bold;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.spotify-card img{
-width:100%;
-border-radius:10px;
-margin-bottom:10px;
-}
+        .artist {
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
 
-.song{
-font-weight:bold;
-}
+        .progress-container {
+            margin-top: 12px;
+        }
 
-.artist{
-font-size:0.9rem;
-opacity:0.8;
-margin-bottom:8px;
-}
+        .progress {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
 
-.progress{
-height:6px;
-background:#222;
-border-radius:10px;
-overflow:hidden;
-}
+        .progress-bar {
+            height: 100%;
+            background: #1db954;
+            width: 0%;
+            transition: width 0.5s linear;
+        }
 
-.progress-bar{
-height:100%;
-background:var(--purple);
-width:0%;
-}
-
-.btn-back{
-display:inline-block;
-margin-top:40px;
-color:var(--blue);
-text-decoration:none;
-font-weight:bold;
-}
-
-</style>
+        .btn-back {
+            display: block;
+            margin-top: 30px;
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
+    <h1>NDJ-Lib Developer</h1>
 
-<h1>NDJ-Lib Developer</h1>
+    <div class="profile">
+        <div class="avatar-wrapper">
+            <img id="avatar" class="avatar" src="">
+            <div id="status" class="status-dot"></div>
+        </div>
 
-<div class="profile">
+        <div id="name" class="name">Carregando...</div>
+        
+        <div id="bio" class="bubble">
+            Puxando status do Discord...
+        </div>
+    </div>
 
-<div class="avatar-wrapper">
+    <div id="spotifyCard" class="spotify-card">
+        <div class="spotify-info">
+            <img id="album" src="">
+            <div class="song-details">
+                <div class="song" id="song">Música</div>
+                <div class="artist" id="artist">Artista</div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
 
-<img id="avatar" class="avatar">
-
-<div id="status" class="status-dot"></div>
-
-</div>
-
-<div class="info">
-
-<div id="bio" class="bubble">
-Carregando status...
-</div>
-
-<div id="name" class="name"></div>
-
-</div>
-
-</div>
-
-<div id="spotifyCard" class="spotify-card" style="display:none;">
-
-<img id="album">
-
-<div class="song" id="song"></div>
-<div class="artist" id="artist"></div>
-
-<div class="progress">
-<div id="progressBar" class="progress-bar"></div>
-</div>
-
-</div>
-
-<div style="text-align:center;">
-<a href="index.html" class="btn-back">← Voltar</a>
-</div>
-
+    <div style="text-align:center;">
+        <a href="index.html" class="btn-back">← Voltar ao início</a>
+    </div>
 </div>
 
 <script>
+    const USER_ID = "1448096319372656703";
+    let songStart = 0;
+    let songEnd = 0;
 
-const USER_ID="1448096319372656703";
+    async function atualizar() {
+        try {
+            const r = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+            const data = await r.json();
 
-let start=0;
-let end=0;
+            if (!data.success) return;
+            const d = data.data;
 
-async function atualizar(){
+            // 1. Dados Básicos
+            const user = d.discord_user;
+            const ext = user.avatar.startsWith("a_") ? "gif" : "png";
+            document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=512`;
+            document.getElementById("name").innerText = user.display_name || user.username;
 
-const r=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-const j=await r.json();
+            // 2. Status (Bolinha)
+            const dot = document.getElementById("status");
+            dot.className = "status-dot " + (d.discord_status || "offline");
 
-if(!j.success) return;
+            // 3. Status Personalizado (Bio)
+            const customAct = d.activities.find(act => act.type === 4);
+            document.getElementById("bio").innerText = customAct ? customAct.state : "Sem status no momento";
 
-const d=j.data;
-const user=d.discord_user;
+            // 4. Spotify
+            const spotifyCard = document.getElementById("spotifyCard");
+            if (d.listening_to_spotify && d.spotify) {
+                spotifyCard.style.display = "block";
+                document.getElementById("album").src = d.spotify.album_art_url;
+                document.getElementById("song").innerText = d.spotify.song;
+                document.getElementById("artist").innerText = d.spotify.artist;
+                
+                songStart = d.spotify.timestamps.start;
+                songEnd = d.spotify.timestamps.end;
+            } else {
+                spotifyCard.style.display = "none";
+                songStart = 0;
+                songEnd = 0;
+            }
 
-/* avatar */
+        } catch (e) {
+            console.error("Erro ao atualizar:", e);
+        }
+    }
 
-document.getElementById("avatar").src=
-`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`;
+    function atualizarBarra() {
+        if (songStart && songEnd) {
+            const now = Date.now();
+            const total = songEnd - songStart;
+            const atual = now - songStart;
+            let pct = (atual / total) * 100;
+            
+            if (pct > 100) pct = 100;
+            if (pct < 0) pct = 0;
+            
+            document.getElementById("progressBar").style.width = pct + "%";
+        }
+    }
 
-/* nome */
-
-document.getElementById("name").innerText=
-user.display_name || user.username;
-
-/* status */
-
-const dot=document.getElementById("status");
-
-dot.classList.remove("online","idle","dnd","offline");
-
-if(d.discord_status){
-dot.classList.add(d.discord_status);
-}
-
-/* custom status */
-
-let bio="Sem status";
-
-if(d.activities){
-
-for(const act of d.activities){
-
-if(act.name==="Custom Status" && act.state){
-
-bio=act.state;
-
-}
-
-}
-
-}
-
-document.getElementById("bio").innerText=bio;
-
-/* spotify */
-
-if(d.spotify){
-
-const s=d.spotify;
-
-document.getElementById("spotifyCard").style.display="block";
-
-document.getElementById("album").src=s.album_art_url;
-document.getElementById("song").innerText=s.song;
-document.getElementById("artist").innerText=s.artist;
-
-start=s.timestamps.start;
-end=s.timestamps.end;
-
-}else{
-
-document.getElementById("spotifyCard").style.display="none";
-
-}
-
-}
-
-/* barra da música */
-
-function atualizarBarra(){
-
-if(start && end){
-
-const now=Date.now();
-
-const total=end-start;
-const atual=now-start;
-
-let pct=(atual/total)*100;
-
-if(pct>100) pct=100;
-
-document.getElementById("progressBar").style.width=pct+"%";
-
-}
-
-}
-
-atualizar();
-
-setInterval(atualizar,5000);
-setInterval(atualizarBarra,1000);
-
+    // Inicialização
+    atualizar();
+    setInterval(atualizar, 5000);
+    setInterval(atualizarBarra, 1000);
 </script>
 
 </body>
