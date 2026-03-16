@@ -10,7 +10,7 @@
             --card: #161b22;
             --text: #e6edf3;
             --purple: #6f2da8;
-            --blue: #005a82;
+            --green: #1db954;
         }
 
         body {
@@ -18,16 +18,16 @@
             color: var(--text);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 450px;
+            max-width: 380px;
             background: var(--card);
             padding: 30px;
             border-radius: 24px;
@@ -35,71 +35,76 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h1 {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #8b949e;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .profile {
+        /* Layout Profile com Balão */
+        .profile-header {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            text-align: center;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .avatar-wrapper {
             position: relative;
+            flex-shrink: 0;
         }
 
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
             border: 3px solid var(--purple);
-            box-shadow: 0 0 20px rgba(111,45,168,0.4);
+            box-shadow: 0 0 15px rgba(111, 45, 168, 0.4);
             object-fit: cover;
         }
 
         .status-dot {
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            width: 20px;
-            height: 20px;
+            bottom: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            border: 4px solid var(--card);
+            border: 3px solid var(--card);
+            background: #747f8d;
         }
 
-        .online { background: #3ba55d; }
-        .idle { background: #faa61a; }
-        .dnd { background: #ed4245; }
-        .offline { background: #747f8d; }
+        /* Balão de Fala Anime */
+        .bubble {
+            background: #fff;
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            position: relative;
+            flex: 1;
+            box-shadow: 4px 4px 0px var(--purple);
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bubble::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 12px solid #fff;
+        }
 
         .name {
             font-size: 1.5rem;
             font-weight: 900;
             margin: 10px 0;
+            word-break: break-all;
         }
 
-        .bubble {
-            background: #0d1117;
-            padding: 15px;
-            border-radius: 12px;
-            border-left: 4px solid var(--purple);
-            font-size: 0.9rem;
-            line-height: 1.4;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Spotify Card Estilizado */
+        /* Spotify Estilizado */
         .spotify-card {
-            margin-top: 25px;
+            margin-top: 20px;
             background: #0d1117;
             border-radius: 16px;
             padding: 15px;
@@ -109,78 +114,71 @@
 
         .spotify-info {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
         }
 
         .spotify-info img {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--green);
+            animation: rotate 8s linear infinite;
         }
 
-        .song-details {
-            flex: 1;
-            overflow: hidden;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .song {
-            font-weight: bold;
-            font-size: 0.95rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .artist {
-            font-size: 0.85rem;
-            color: #8b949e;
-        }
-
-        .progress-container {
-            margin-top: 12px;
-        }
+        .song-details { flex: 1; overflow: hidden; }
+        .song { font-weight: bold; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        .artist { font-size: 0.8rem; color: #8b949e; }
 
         .progress {
             height: 4px;
             background: #333;
             border-radius: 2px;
+            margin-top: 12px;
             overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background: #1db954;
+            background: var(--green);
             width: 0%;
-            transition: width 0.5s linear;
+            transition: width 1s linear;
         }
+
+        /* Cores de Status */
+        .online { background: #3ba55d; }
+        .idle { background: #faa61a; }
+        .dnd { background: #ed4245; }
+        .offline { background: #747f8d; }
 
         .btn-back {
             display: block;
-            margin-top: 30px;
+            text-align: center;
+            margin-top: 25px;
             color: #58a6ff;
             text-decoration: none;
             font-size: 0.9rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>NDJ-Lib Developer</h1>
-
-    <div class="profile">
+    <div class="profile-header">
         <div class="avatar-wrapper">
             <img id="avatar" class="avatar" src="">
             <div id="status" class="status-dot"></div>
         </div>
-
-        <div id="name" class="name">Carregando...</div>
-        
-        <div id="bio" class="bubble">
-            Puxando status do Discord...
-        </div>
+        <div id="bio" class="bubble">...</div>
     </div>
+
+    <div id="name" class="name">Carregando...</div>
 
     <div id="spotifyCard" class="spotify-card">
         <div class="spotify-info">
@@ -190,84 +188,76 @@
                 <div class="artist" id="artist">Artista</div>
             </div>
         </div>
-        <div class="progress-container">
-            <div class="progress">
-                <div id="progressBar" class="progress-bar"></div>
-            </div>
-        </div>
+        <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
     </div>
 
-    <div style="text-align:center;">
-        <a href="index.html" class="btn-back">← Voltar ao início</a>
-    </div>
+    <a href="index.html" class="btn-back">← Voltar</a>
 </div>
 
 <script>
     const USER_ID = "1448096319372656703";
-    let songStart = 0;
-    let songEnd = 0;
+    let sStart = 0, sEnd = 0;
 
-    async function atualizar() {
-        try {
-            const r = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-            const data = await r.json();
+    // Sistema WebSocket da Lanyard
+    const socket = new WebSocket("wss://api.lanyard.rest/socket");
 
-            if (!data.success) return;
-            const d = data.data;
+    socket.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
 
-            // 1. Dados Básicos
-            const user = d.discord_user;
-            const ext = user.avatar.startsWith("a_") ? "gif" : "png";
-            document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=512`;
-            document.getElementById("name").innerText = user.display_name || user.username;
+        // Op 1: Hello (Primeiro contato)
+        if (msg.op === 1) {
+            socket.send(JSON.stringify({
+                op: 2,
+                d: { subscribe_to_id: USER_ID }
+            }));
+            // Heartbeat para manter conexão viva
+            setInterval(() => socket.send(JSON.stringify({ op: 3 })), msg.d.heartbeat_interval);
+        }
 
-            // 2. Status (Bolinha)
-            const dot = document.getElementById("status");
-            dot.className = "status-dot " + (d.discord_status || "offline");
+        // INIT ou UPDATE de Presença
+        if (msg.t === "INIT_STATE" || msg.t === "PRESENCE_UPDATE") {
+            const d = msg.t === "INIT_STATE" ? msg.d : msg.d;
+            updateUI(msg.t === "INIT_STATE" ? d[USER_ID] : d);
+        }
+    };
 
-            // 3. Status Personalizado (Bio)
-            const customAct = d.activities.find(act => act.type === 4);
-            document.getElementById("bio").innerText = customAct ? customAct.state : "Sem status no momento";
+    function updateUI(d) {
+        if (!d) return;
 
-            // 4. Spotify
-            const spotifyCard = document.getElementById("spotifyCard");
-            if (d.listening_to_spotify && d.spotify) {
-                spotifyCard.style.display = "block";
-                document.getElementById("album").src = d.spotify.album_art_url;
-                document.getElementById("song").innerText = d.spotify.song;
-                document.getElementById("artist").innerText = d.spotify.artist;
-                
-                songStart = d.spotify.timestamps.start;
-                songEnd = d.spotify.timestamps.end;
-            } else {
-                spotifyCard.style.display = "none";
-                songStart = 0;
-                songEnd = 0;
-            }
+        // Avatar e Nome
+        const user = d.discord_user;
+        const ext = user.avatar.startsWith("a_") ? "gif" : "png";
+        document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
+        document.getElementById("name").innerText = user.display_name || user.username;
 
-        } catch (e) {
-            console.error("Erro ao atualizar:", e);
+        // Status e Bio
+        document.getElementById("status").className = "status-dot " + (d.discord_status || "offline");
+        const custom = d.activities.find(a => a.type === 4);
+        document.getElementById("bio").innerText = custom ? custom.state : "Zzz...";
+
+        // Spotify
+        const card = document.getElementById("spotifyCard");
+        if (d.listening_to_spotify && d.spotify) {
+            card.style.display = "block";
+            document.getElementById("album").src = d.spotify.album_art_url;
+            document.getElementById("song").innerText = d.spotify.song;
+            document.getElementById("artist").innerText = d.spotify.artist;
+            sStart = d.spotify.timestamps.start;
+            sEnd = d.spotify.timestamps.end;
+        } else {
+            card.style.display = "none";
+            sStart = 0; sEnd = 0;
         }
     }
 
-    function atualizarBarra() {
-        if (songStart && songEnd) {
+    // Atualização da barra de progresso
+    setInterval(() => {
+        if (sStart && sEnd) {
             const now = Date.now();
-            const total = songEnd - songStart;
-            const atual = now - songStart;
-            let pct = (atual / total) * 100;
-            
-            if (pct > 100) pct = 100;
-            if (pct < 0) pct = 0;
-            
-            document.getElementById("progressBar").style.width = pct + "%";
+            let pct = ((now - sStart) / (sEnd - sStart)) * 100;
+            document.getElementById("progressBar").style.width = Math.min(100, Math.max(0, pct)) + "%";
         }
-    }
-
-    // Inicialização
-    atualizar();
-    setInterval(atualizar, 5000);
-    setInterval(atualizarBarra, 1000);
+    }, 1000);
 </script>
 
 </body>
