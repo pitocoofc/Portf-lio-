@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil | NDJ-Lib</title>
+
+<style>
+:root{
+--bg:#0a0a0c;
+--card:#161b22;
+--text:#e6edf3;
+--purple:#6f2da8;
+--blue:#005a82;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'Inter',sans-serif;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:40px auto;
+background:var(--card);
+padding:40px;
+border-radius:20px;
+border:1px solid #30363d;
+}
+
+.profile{
+display:flex;
+align-items:center;
+gap:25px;
+margin-top:30px;
+}
+
+.avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+border:3px solid var(--purple);
+box-shadow:0 0 20px rgba(111,45,168,0.5);
+}
+
+.info{
+flex:1;
+}
+
+.name{
+font-size:1.6rem;
+font-weight:900;
+margin-bottom:10px;
+}
+
+.spotify{
+color:var(--blue);
+font-weight:bold;
+}
+
+.bubble{
+position:relative;
+background:#0d1117;
+padding:20px;
+border-radius:15px;
+border-left:4px solid var(--purple);
+margin-bottom:20px;
+}
+
+.bubble::after{
+content:"";
+position:absolute;
+left:-12px;
+top:25px;
+border-width:10px;
+border-style:solid;
+border-color:transparent #0d1117 transparent transparent;
+}
+
+.btn-back{
+display:inline-block;
+margin-top:40px;
+color:var(--blue);
+text-decoration:none;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 style="text-align:center;">NDJ-Lib Developer</h1>
+
+<div class="profile">
+
+<img id="avatar" class="avatar">
+
+<div class="info">
+
+<div id="bio" class="bubble">
+Carregando descrição...
+</div>
+
+<div id="name" class="name">
+Carregando...
+</div>
+
+<div id="spotify" class="spotify"></div>
+
+</div>
+</div>
+
+<div style="text-align:center;">
+<a href="index.html" class="btn-back">← Voltar</a>
+</div>
+
+</div>
+
+<script>
+
+const USER_ID="1448096319372656703";
+
+async function carregar(){
+
+const r=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+const j=await r.json();
+const d=j.data;
+
+const user=d.discord_user;
+
+document.getElementById("avatar").src=
+`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+
+document.getElementById("name").innerText=
+user.display_name || user.username;
+
+/* bio (custom status) */
+
+let bio="Sem status";
+
+for(const act of d.activities){
+
+if(act.type===4){
+bio=act.state;
+}
+
+}
+
+document.getElementById("bio").innerText=bio;
+
+/* spotify */
+
+if(d.listening_to_spotify){
+
+const s=d.spotify;
+
+document.getElementById("spotify").innerText=
+`🎵 ${s.song} — ${s.artist}`;
+
+}else{
+
+document.getElementById("spotify").innerText="";
+
+}
+
+}
+
+carregar();
+
+</script>
+
+</body>
+  </html>
